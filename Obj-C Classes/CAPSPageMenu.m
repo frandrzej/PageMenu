@@ -71,6 +71,19 @@ typedef NS_ENUM(NSUInteger, CAPSPageMenuScrollDirection) {
 
 @implementation CAPSPageMenu
 
+-(void)setMenuHeight:(CGFloat)menuHeight
+{
+    _menuHeight = menuHeight;
+    _menuScrollView.frame = CGRectMake(0.0, 0.0, self.view.frame.size.width, _menuHeight);
+    _controllerScrollView.frame = CGRectMake(0.0, 0, self.view.frame.size.width, self.view.frame.size.height - _menuHeight);
+    for (UIView *view in self.controllerScrollView.subviews) {
+        CGRect frame = view.frame;
+        frame.origin.y = menuHeight;
+        frame.size.height = self.view.frame.size.height - _menuHeight;
+        view.frame = frame;
+    }
+}
+
 NSString * const CAPSPageMenuOptionSelectionIndicatorHeight             = @"selectionIndicatorHeight";
 NSString * const CAPSPageMenuOptionMenuItemSeparatorWidth               = @"menuItemSeparatorWidth";
 NSString * const CAPSPageMenuOptionScrollMenuBackgroundColor            = @"scrollMenuBackgroundColor";
@@ -448,9 +461,9 @@ NSString * const CAPSPageMenuOptionHideTopMenuBar                       = @"hide
                                     if (index >= 0 && index < _controllerArray.count ){
                                         // Check dictionary if page was already added
                                         if (![_pagesAddedSet containsObject:@(index)]) {
-
+                                            
                                             [self addPageAtIndex:index];
-
+                                            
                                             [_pagesAddedSet addObject:@(index)];
                                         }
                                     }
@@ -465,10 +478,10 @@ NSString * const CAPSPageMenuOptionHideTopMenuBar                       = @"hide
                                 if (_currentPageIndex != _controllerArray.count - 1 ){
                                     // Add page to the left of current page
                                     NSInteger index = _currentPageIndex - 1;
-
+                                    
                                     if (![_pagesAddedSet containsObject:@(index)] && index < _controllerArray.count && index >= 0) {
                                         [self addPageAtIndex:index];
-
+                                        
                                         [_pagesAddedSet addObject:@(index)];
                                     }
                                     
@@ -480,7 +493,7 @@ NSString * const CAPSPageMenuOptionHideTopMenuBar                       = @"hide
                                     NSInteger index = _currentPageIndex + 1;
                                     
                                     if (![_pagesAddedSet containsObject:@(index)] && index < _controllerArray.count && index >= 0) {
-
+                                        
                                         [self addPageAtIndex:index];
                                         [_pagesAddedSet addObject:@(index)];
                                     }
@@ -538,9 +551,9 @@ NSString * const CAPSPageMenuOptionHideTopMenuBar                       = @"hide
                             }
                             NSInteger indexRightTwo = page + 2;
                             if ([_pagesAddedSet containsObject:@(indexRightTwo)]) {
-
+                                
                                 [_pagesAddedSet removeObject:@(indexRightTwo)];
-
+                                
                                 [self removePageAtIndex:indexRightTwo];
                             }
                         }
@@ -608,7 +621,7 @@ NSString * const CAPSPageMenuOptionHideTopMenuBar                       = @"hide
             [self removePageAtIndex:num.integerValue];
         }
     }
-
+    
     _startingPageForScroll = _currentPageIndex;
     _didTapMenuItemToScroll = NO;
     
@@ -925,7 +938,7 @@ NSString * const CAPSPageMenuOptionHideTopMenuBar                       = @"hide
 }
 
 
-// MARK: Getter 
+// MARK: Getter
 - (NSArray *)menuItems
 {
     return _mutableMenuItems;
